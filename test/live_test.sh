@@ -40,13 +40,27 @@ LIST=$("${CURL[@]}" "$BASE/api/entries")
 echo "$LIST" | grep -q "$MARKER"; check "marker present in recent list on fresh request" $?
 
 # 4. Newest-first: the marker is the first message in the list.
-FIRST_MSG=$(echo "$LIST" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d[0]["message"] if d else "")' 2>/dev/null)
+if command -v node >/dev/null 2>&1; then
+  FIRST_MSG=$(echo "$LIST" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{const a=JSON.parse(d);console.log(a.length?a[0].message:"")})')
+else
+  FIRST_MSG=$(echo "$LIST" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d[0]["message"] if d else "")')
+fi
 [ "$FIRST_MSG" = "$MARKER" ]; check "marker is newest-first in the list" $?
 
-# 5. Validation guard: empty submit rejected.
+# 5. Validation guards: empty and oversize submissions rejected.
 CODE=$("${CURL[@]}" -o /dev/null -w "%{http_code}" -X POST "$BASE/api/entries" \
   -H "Content-Type: application/json" -d '{"name":"","message":""}')
 [ "$CODE" = "400" ]; check "empty submission rejected with 400" $?
+
+LONG_NAME=$(printf 'x%.0s' $(seq 1 81))
+CODE=$("${CURL[@]}" -o /dev/null -w "%{http_code}" -X POST "$BASE/api/entries" \
+  -H "Content-Type: application/json" -d "{\"name\":\"$LONG_NAME\",\"message\":\"hi\"}")
+[ "$CODE" = "400" ]; check "oversize name (81 chars) rejected with 400" $?
+
+LONG_MSG=$(printf 'x%.0s' $(seq 1 501))
+CODE=$("${CURL[@]}" -o /dev/null -w "%{http_code}" -X POST "$BASE/api/entries" \
+  -H "Content-Type: application/json" -d "{\"name\":\"Live Test\",\"message\":\"$LONG_MSG\"}")
+[ "$CODE" = "400" ]; check "oversize message (501 chars) rejected with 400" $?
 
 echo "== $FAILURES failure(s) =="
 exit "$FAILURES"

@@ -5,9 +5,28 @@ const fs = require("fs");
 const path = require("path");
 const { Client } = require("pg");
 
+// External Render connection strings require SSL; internal (dpg-xxx host) do not.
+const ssl = /\.render\.com/.test(process.env.DATABASE_URL || "")
+  ? { rejectUnauthorized: false }
+  : false;
+
+async function connectWithRetry(attempts = 5, delayMs = 3000) {
+  for (let i = 1; ; i++) {
+    const client = new Client({ connectionString: process.env.DATABASE_URL, ssl });
+    try {
+      await client.connect();
+      return client;
+    } catch (err) {
+      await client.end().catch(() => {});
+      if (i >= attempts) throw err;
+      console.error(`connect attempt ${i} failed (${err.message}), retrying...`);
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
+  }
+}
+
 async function main() {
-  const client = new Client({ connectionString: process.env.DATABASE_URL });
-  await client.connect();
+  const client = await connectWithRetry();
   try {
     await client.query(
       "CREATE TABLE IF NOT EXISTS schema_migrations (version TEXT PRIMARY KEY, applied_at TIMESTAMPTZ DEFAULT now())"

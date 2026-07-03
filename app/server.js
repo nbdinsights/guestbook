@@ -2,7 +2,12 @@ const path = require("path");
 const express = require("express");
 const { Pool } = require("pg");
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// External Render connection strings require SSL; internal (dpg-xxx host) do not.
+const ssl = /\.render\.com/.test(process.env.DATABASE_URL || "")
+  ? { rejectUnauthorized: false }
+  : false;
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl });
+pool.on("error", (err) => console.error("idle client error:", err.message));
 const app = express();
 
 app.use(express.json());
