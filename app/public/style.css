@@ -1,0 +1,117 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #faf6ef;
+  color: #2c2721;
+  font: 16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.4rem;
+  margin: 0 0 4px;
+}
+
+.tagline {
+  color: #7a7266;
+  margin: 0 0 32px;
+}
+
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.3rem;
+  margin: 40px 0 12px;
+}
+
+form {
+  background: #fff;
+  border: 1px solid #e8e0d2;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 12px 0 4px;
+}
+
+label:first-child { margin-top: 0; }
+
+input, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d8cfbf;
+  border-radius: 6px;
+  font: inherit;
+  background: #fffdf9;
+}
+
+input:focus, textarea:focus {
+  outline: 2px solid #b08d57;
+  outline-offset: 1px;
+}
+
+button {
+  margin-top: 16px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #7c5c2e;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover { background: #684c24; }
+button:disabled { opacity: 0.6; cursor: default; }
+
+#form-status {
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+  min-height: 1.2em;
+}
+
+#form-status.ok { color: #3d6b35; }
+#form-status.err { color: #a03030; }
+
+.entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.entries li {
+  background: #fff;
+  border: 1px solid #e8e0d2;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+
+.entries .who {
+  font-weight: 700;
+}
+
+.entries .when {
+  color: #9a917f;
+  font-size: 0.8rem;
+  margin-left: 8px;
+}
+
+.entries .msg {
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+#empty-note { color: #7a7266; }

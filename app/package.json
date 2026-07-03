@@ -1,0 +1,16 @@
+{
+  "name": "guestbook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Simple guestbook: name + message, persisted in Postgres",
+  "engines": {
+    "node": ">=20 <23"
+  },
+  "scripts": {
+    "start": "node migrate.js && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}

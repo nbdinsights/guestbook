@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guestbook</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="wrap">
+    <h1>Guestbook</h1>
+    <p class="tagline">Leave a note for the next visitor.</p>
+
+    <form id="entry-form" autocomplete="off">
+      <label for="name">Your name</label>
+      <input id="name" name="name" maxlength="80" required placeholder="Ada Lovelace">
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" maxlength="500" rows="3" required
+        placeholder="So glad I stopped by…"></textarea>
+
+      <button type="submit" id="submit-btn">Sign the guestbook</button>
+      <p id="form-status" role="status"></p>
+    </form>
+
+    <section aria-label="Recent messages">
+      <h2>Recent messages</h2>
+      <ul id="entries" class="entries"></ul>
+      <p id="empty-note" hidden>No messages yet — be the first to sign.</p>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

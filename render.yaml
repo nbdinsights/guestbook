@@ -1,0 +1,21 @@
+# Documentation / validation of the guestbook infrastructure.
+# Resources are created imperatively (render services create + Render API for Postgres),
+# so DATABASE_URL is wired at create time. This file mirrors the intended shape.
+databases:
+  - name: guestbook-db
+    plan: free
+
+services:
+  - type: web
+    runtime: node
+    name: guestbook
+    plan: free
+    rootDir: app
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: guestbook-db
+          property: connectionString
